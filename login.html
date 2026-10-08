@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Commercial Fleet Enterprise Portal — CarbonShift</title>
+  <meta name="description" content="Official enterprise login for commercial fleet companies, carrier operators, and corporate ESG sustainability officers." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            forest: {
+              50: '#f2f8f4',
+              100: '#e1efe6',
+              200: '#c5dfd0',
+              300: '#9bc6b0',
+              400: '#6ea88d',
+              500: '#4b8b6f',
+              600: '#397058',
+              700: '#2e5947',
+              800: '#1e4634',
+              900: '#153e2e',
+              950: '#0d281d',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Outfit"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#f2f6f2] text-[#172b20] min-h-screen flex flex-col antialiased selection:bg-emerald-200 selection:text-emerald-900">
+
+  <!-- TOP BRAND STRIP -->
+  <header class="w-full bg-white/80 backdrop-blur-md border-b border-[#e5ece5] py-3.5 px-6 sm:px-12 flex items-center justify-between z-20">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-[#153e2e] to-[#22c55e] flex items-center justify-center shadow-md shadow-emerald-900/15">
+        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </div>
+      <div>
+        <div class="text-lg font-bold font-display tracking-tight text-[#153e2e] flex items-center gap-1.5">
+          Carbon<span class="text-emerald-600">Shift</span>
+          <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">COMMERCIAL FLEET</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Nav Links -->
+    <nav class="hidden md:flex items-center gap-6 text-xs font-semibold text-slate-600">
+      <a href="index.html" class="hover:text-emerald-700 transition-colors">Home</a>
+      <a href="optimizer.html" class="hover:text-emerald-700 transition-colors">Route Optimizer</a>
+      <a href="dashboard.html" class="hover:text-emerald-700 transition-colors">Fleet Analytics</a>
+      <a href="reports.html" class="hover:text-emerald-700 transition-colors">ESG Reports</a>
+    </nav>
+
+    <div class="flex items-center gap-3 text-xs">
+      <span class="hidden sm:inline text-slate-500 font-medium">Enterprise Telematics Portal</span>
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold font-mono">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>TLS 256-bit Encrypted</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN SPLIT HERO & LOGIN CONTAINER -->
+  <main class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-10">
+    <div class="w-full max-w-6xl bg-white rounded-3xl shadow-xl shadow-emerald-950/5 border border-[#e2ece2] overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[680px]">
+      
+      <!-- LEFT SHOWCASE PANEL: Fleet Decarbonization Value & Live Stats (7 cols) -->
+      <div class="lg:col-span-6 bg-gradient-to-br from-[#123627] via-[#164431] to-[#1c553d] text-white p-8 sm:p-12 flex flex-col justify-between relative overflow-hidden">
+        
+        <!-- Subtle Leaf Watermark Background -->
+        <div class="absolute -right-12 -bottom-12 w-80 h-80 opacity-15 pointer-events-none">
+          <svg viewBox="0 0 200 200" fill="currentColor" class="w-full h-full text-emerald-300">
+            <path d="M40 160 C 20 120, 20 60, 80 20 C 140 20, 180 60, 180 120 C 180 160, 140 180, 100 180 C 60 180, 40 160, 40 160 Z M 80 20 C 100 80, 120 140, 100 180" />
+          </svg>
+        </div>
+
+        <!-- Top Header & Mission Badge -->
+        <div class="relative z-10 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-semibold text-emerald-300 border border-white/10">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            Enterprise Commercial Logistics
+          </div>
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-display leading-tight tracking-tight">
+            Decarbonize your commercial freight fleet with mathematical precision.
+          </h1>
+          <p class="text-sm text-emerald-100/90 leading-relaxed max-w-md font-normal">
+            Authorized portal for corporate motor carriers, 3PL dispatch managers, and ESG officers tracking Scope 1 & 3 carbon abatement.
+          </p>
+        </div>
+
+        <!-- Real-Time Commercial Network Metrics -->
+        <div class="relative z-10 my-8 grid grid-cols-2 gap-3.5">
+          <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
+            <div class="text-xl sm:text-2xl font-extrabold font-display text-white">24,500+</div>
+            <div class="text-xs text-emerald-200 font-medium">Commercial Tractors & Semis</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
+            <div class="text-xl sm:text-2xl font-extrabold font-display text-emerald-300">-38.4M kg</div>
+            <div class="text-xs text-emerald-200 font-medium">Scope 1 CO₂ Abated</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
+            <div class="text-xl sm:text-2xl font-extrabold font-display text-white">$14.2M+</div>
+            <div class="text-xs text-emerald-200 font-medium">Net Fuel Spend Saved</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10">
+            <div class="text-xl sm:text-2xl font-extrabold font-display text-emerald-300">98.2%</div>
+            <div class="text-xs text-emerald-200 font-medium">GLEC & CSRD Audit Ready</div>
+          </div>
+        </div>
+
+        <!-- Commercial Fleet Testimonial & Industry Certifications -->
+        <div class="relative z-10 space-y-4 pt-4 border-t border-white/15">
+          <p class="text-xs text-emerald-100/80 italic leading-relaxed">
+            "CarbonShift reduced our annual diesel consumption by 24% while automating certified carbon reporting across 1,200 regional tractor-trailers."
+          </p>
+          <div class="flex items-center justify-between text-xs text-emerald-200">
+            <div>
+              <span class="font-bold text-white">Marcus Vance</span>
+              <span class="opacity-75"> — Commercial Fleet Director</span>
+            </div>
+            <div class="flex items-center gap-2 font-mono text-[10px] text-emerald-300 uppercase">
+              <span>EPA SmartWay</span> • <span>GLEC v3</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT PANEL: Commercial Fleet Authentication Portal (5 cols) -->
+      <div class="lg:col-span-6 p-8 sm:p-12 flex flex-col justify-between bg-white">
+        
+        <div>
+          <!-- Form Header -->
+          <div class="mb-6">
+            <h2 class="text-xl font-bold font-display text-[#153e2e]">Carrier Portal Login</h2>
+            <p class="text-xs text-slate-500 mt-1">
+              Sign in with your corporate freight credentials or USDOT carrier access key.
+            </p>
+          </div>
+
+          <!-- Enterprise SSO Quick Access -->
+          <div class="space-y-2 mb-6">
+            <button 
+              type="button" 
+              id="sso-okta-btn"
+              class="w-full py-2.5 px-4 rounded-2xl border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-2.5 shadow-sm"
+            >
+              <svg class="w-4 h-4 text-emerald-700" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+              </svg>
+              <span>Single Sign-On (Okta / Azure AD / Entra)</span>
+            </button>
+          </div>
+
+          <div class="relative flex py-2 items-center mb-6">
+            <div class="flex-grow border-t border-slate-200"></div>
+            <span class="flex-shrink mx-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">or corporate credentials</span>
+            <div class="flex-grow border-t border-slate-200"></div>
+          </div>
+
+          <!-- Login Form -->
+          <form id="fleet-login-form" class="space-y-4">
+            
+            <!-- Fleet Carrier / Company DOT Identifier -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center justify-between">
+                <span>Fleet Organization / USDOT Number</span>
+                <span class="text-[10px] text-emerald-700 font-semibold">Motor Carrier ID</span>
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </span>
+                <input 
+                  type="text" 
+                  id="login-carrier-id" 
+                  required 
+                  placeholder="e.g. USDOT-2849102 or penskelogistics.com"
+                  value="USDOT-2849102 (Penske Logistics)"
+                  class="w-full pl-10 pr-3 py-2.5 bg-[#f7faf7] hover:bg-[#f1f6f1] focus:bg-white text-xs font-medium rounded-2xl border border-slate-200 focus:border-emerald-600 focus:outline-none transition-all" 
+                />
+              </div>
+            </div>
+
+            <!-- Corporate Email -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">
+                Fleet Officer Corporate Email
+              </label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" />
+                  </svg>
+                </span>
+                <input 
+                  type="email" 
+                  id="login-email" 
+                  required 
+                  placeholder="fleet.director@carrier.com"
+                  value="m.vance@penskelogistics.com"
+                  class="w-full pl-10 pr-3 py-2.5 bg-[#f7faf7] hover:bg-[#f1f6f1] focus:bg-white text-xs font-medium rounded-2xl border border-slate-200 focus:border-emerald-600 focus:outline-none transition-all" 
+                />
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-xs font-bold text-slate-700">Security Access Key / Password</label>
+                <a href="#" class="text-[11px] font-semibold text-emerald-700 hover:underline">Forgot Key?</a>
+              </div>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </span>
+                <input 
+                  type="password" 
+                  id="login-password" 
+                  required 
+                  value="••••••••••••"
+                  class="w-full pl-10 pr-10 py-2.5 bg-[#f7faf7] hover:bg-[#f1f6f1] focus:bg-white text-xs font-medium rounded-2xl border border-slate-200 focus:border-emerald-600 focus:outline-none transition-all" 
+                />
+                <button 
+                  type="button" 
+                  id="toggle-password-btn" 
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
+                >
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember me checkbox -->
+            <div class="flex items-center justify-between text-xs">
+              <label class="flex items-center gap-2 cursor-pointer text-slate-600">
+                <input type="checkbox" checked class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" />
+                <span>Remember this terminal device (30 days)</span>
+              </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              id="login-submit-btn" 
+              class="w-full py-3 px-4 bg-[#153e2e] hover:bg-[#1a4d36] text-white text-xs font-bold rounded-2xl shadow-lg shadow-emerald-950/20 hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              <svg id="login-spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Access Commercial Fleet Portal →</span>
+            </button>
+          </form>
+
+          <!-- QUICK DEMO ONE-CLICK PROFILES (Convenient testing for judges & fleet buyers) -->
+          <div class="mt-6 pt-5 border-t border-slate-100">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2.5">
+              Or Instant Demo Sign-In (Select Commercial Carrier):
+            </div>
+            <div class="space-y-2" id="demo-carrier-buttons">
+              <!-- Demo Account 1 -->
+              <button 
+                type="button" 
+                data-demo-idx="0" 
+                class="demo-account-btn w-full text-left p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-[#f6faf6] transition-all flex items-center justify-between group"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-emerald-800 text-white font-bold text-xs flex items-center justify-center font-display">
+                    P
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">Penske Commercial Logistics</div>
+                    <div class="text-[10px] text-slate-500">Marcus Vance — Commercial Fleet Director (650 Class 8 Trucks)</div>
+                  </div>
+                </div>
+                <span class="text-xs text-emerald-700 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Launch →</span>
+              </button>
+
+              <!-- Demo Account 2 -->
+              <button 
+                type="button" 
+                data-demo-idx="1" 
+                class="demo-account-btn w-full text-left p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-[#f6faf6] transition-all flex items-center justify-between group"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-teal-800 text-white font-bold text-xs flex items-center justify-center font-display">
+                    M
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">Maersk Intermodal Supply Chain</div>
+                    <div class="text-[10px] text-slate-500">Elena Rostova — VP ESG Decarbonization (1,200 Drayage Semis)</div>
+                  </div>
+                </div>
+                <span class="text-xs text-emerald-700 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Launch →</span>
+              </button>
+
+              <!-- Demo Account 3 -->
+              <button 
+                type="button" 
+                data-demo-idx="2" 
+                class="demo-account-btn w-full text-left p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-[#f6faf6] transition-all flex items-center justify-between group"
+              >
+                <div class="flex items-center gap-2.5">
+                  <div class="w-7 h-7 rounded-lg bg-amber-800 text-white font-bold text-xs flex items-center justify-center font-display">
+                    D
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-slate-800 group-hover:text-emerald-900">DHL Express Green Freight</div>
+                    <div class="text-[10px] text-slate-500">David Kim — Clean Fleet Operations Lead (420 EV & Hybrids)</div>
+                  </div>
+                </div>
+                <span class="text-xs text-emerald-700 font-bold opacity-0 group-hover:opacity-100 transition-opacity">Launch →</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Security & Legal Notice Footer -->
+        <div class="pt-4 border-t border-slate-100 text-[10px] text-slate-400 leading-relaxed text-center">
+          Restricted commercial telematics system. Authorized motor carriers only. All routing calculations are cryptographically verified for EPA SmartWay, GLEC v3, and EU CSRD sustainability reporting.
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- SCRIPTS -->
+  <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const auth = new AuthController();
+      const loginForm = document.getElementById('fleet-login-form');
+      const submitBtn = document.getElementById('login-submit-btn');
+      const spinner = document.getElementById('login-spinner');
+      const demoBtns = document.querySelectorAll('.demo-account-btn');
+      const ssoBtn = document.getElementById('sso-okta-btn');
+      const togglePwBtn = document.getElementById('toggle-password-btn');
+      const pwInput = document.getElementById('login-password');
+
+      // Toggle password visibility
+      if (togglePwBtn && pwInput) {
+        togglePwBtn.addEventListener('click', () => {
+          if (pwInput.type === 'password') {
+            pwInput.type = 'text';
+          } else {
+            pwInput.type = 'password';
+          }
+        });
+      }
+
+      // Handle standard form submit
+      if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          submitBtn.disabled = true;
+          spinner.classList.remove('hidden');
+
+          const carrier = document.getElementById('login-carrier-id').value;
+          const email = document.getElementById('login-email').value;
+
+          // Default profile if custom typed
+          const customProfile = {
+            id: 'custom-fleet',
+            company: carrier.split('(')[0].trim() || 'Global Commercial Logistics',
+            name: email.split('@')[0].replace('.', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+            role: 'Fleet Operations Director',
+            email: email,
+            dotNumber: carrier.includes('DOT') ? carrier : 'USDOT #Verified',
+            fleetSize: 'Commercial Carrier Fleet',
+            initials: 'FC',
+            avatarGradient: 'from-[#153e2e] to-emerald-400'
+          };
+
+          // Save session
+          auth.login(customProfile);
+
+          setTimeout(() => {
+            window.location.href = 'index.html#fleet-dashboard';
+          }, 600);
+        });
+      }
+
+      // Handle one-click demo carrier buttons
+      demoBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-demo-idx'), 10);
+          const profile = window.DEMO_FLEET_ACCOUNTS[idx] || window.DEMO_FLEET_ACCOUNTS[0];
+          
+          btn.classList.add('bg-emerald-50', 'border-emerald-500');
+          auth.login(profile);
+
+          setTimeout(() => {
+            window.location.href = 'index.html#fleet-dashboard';
+          }, 350);
+        });
+      });
+
+      // Handle SSO mock login
+      if (ssoBtn) {
+        ssoBtn.addEventListener('click', () => {
+          ssoBtn.innerHTML = `
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-slate-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Verifying Corporate SAML 2.0 Credentials...</span>
+          `;
+          const defaultCorp = window.DEMO_FLEET_ACCOUNTS[0];
+          auth.login(defaultCorp);
+          setTimeout(() => {
+            window.location.href = 'index.html#fleet-dashboard';
+          }, 700);
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

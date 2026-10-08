@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CarbonShift — Find Your Low-Carbon Route | Drive Your Dreams</title>
+  <meta name="description" content="AI-powered commercial fleet eco-routing engine and decarbonization marketplace. Cut fuel spend and achieve Net-Zero." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: '#1d4ed8',
+              'blue-hover': '#1e40af',
+              'blue-light': '#eff6ff',
+              green: '#16a34a',
+              'green-dark': '#14532d',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Outfit"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS for Google Maps Integration -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Mapbox GL Geocoder & Mapbox Search JS CDN -->
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+  <script src="https://api.mapbox.com/search-js/v1.6.0/web.js" defer></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- ======================================================== -->
+  <!-- 1. FULLSCREEN ANIMATED SPLASH SCREEN (WITH CARBONSHIFT IMAGE) -->
+  <!-- ======================================================== -->
+  <div id="carbonshift-splash">
+    <div class="splash-image-container relative">
+      <img src="assets/carbonshift_splash.jpg" alt="CarbonShift Eco Vehicle" id="splash-img" />
+      <div class="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-emerald-900/80 backdrop-blur-md text-white text-[11px] font-bold font-mono">
+        v2.5 PRO
+      </div>
+    </div>
+
+    <!-- Animated Loading Status -->
+    <div class="splash-progress-bar">
+      <div class="splash-progress-fill" id="splash-progress"></div>
+    </div>
+
+    <div class="mt-4 text-xs font-semibold text-emerald-950 flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-600 animate-ping"></span>
+      <span id="splash-status-text">Initializing CarbonShift Telemetry Engine...</span>
+    </div>
+
+    <button id="skip-splash-btn" class="mt-5 px-5 py-2 rounded-full bg-white/90 hover:bg-white text-emerald-900 font-bold text-xs shadow-md border border-emerald-200 transition-all hover:scale-105">
+      Enter Platform →
+    </button>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 2. DRIVENEST-STYLE TOP NAVIGATION BAR                    -->
+  <!-- ======================================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo (DriveNest Style -> CarbonShift) -->
+      <a href="#home" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-blue to-emerald-500 flex items-center justify-center shadow-md shadow-blue-900/15">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <div class="text-2xl font-black font-display tracking-tight text-[#0f172a] flex items-center">
+            Carbon<span class="text-brand-blue">Shift</span>
+          </div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 -mt-1 font-mono">Eco Fleet Platform</span>
+        </div>
+      </a>
+
+      <!-- Center Navigation Links (Tabs open to different pages) -->
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="text-brand-blue hover:text-brand-blue transition-colors flex items-center gap-1.5 font-bold">
+          <span>Home</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+        </a>
+        <a href="optimizer.html" class="hover:text-brand-blue transition-colors">Route Optimizer</a>
+        <a href="dashboard.html" class="hover:text-brand-blue transition-colors">Fleet Analytics</a>
+        <a href="reports.html" class="hover:text-brand-blue transition-colors">ESG Reports</a>
+        <a href="#featured-listings-section" class="hover:text-brand-blue transition-colors">Eco Fleets</a>
+        <a href="#why-choose-section" class="hover:text-brand-blue transition-colors">Why CarbonShift</a>
+      </nav>
+
+      <!-- Right Action Items (Sign In, Saved, Calculate/List) -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        
+        <!-- Replay Splash Screen Button -->
+        <button id="replay-splash-btn" class="p-2 rounded-xl text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 transition-colors" title="Replay Splash Screen">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
+
+        <!-- Saved / Heart Icon -->
+        <button class="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Saved Fleets">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </button>
+
+        <!-- Dynamic Carrier Auth Dropdown / Sign In -->
+        <div id="header-auth-container" class="flex items-center">
+          <!-- Populated via js/auth.js -->
+        </div>
+
+        <!-- Primary Action Button (DriveNest "List Your Car" style -> "Calculate Eco-Route") -->
+        <a href="optimizer.html" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-bold transition-all shadow-md shadow-blue-700/20 hover:shadow-lg">
+          <svg class="w-4 h-4 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+          </svg>
+          <span>Calculate Eco-Route</span>
+        </a>
+
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- 3. DRIVENEST HERO SECTION                                -->
+  <!-- ======================================================== -->
+  <section id="home" class="relative pt-12 pb-24 overflow-hidden bg-gradient-to-b from-white via-slate-50 to-[#f8fafc]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left Hero Text (DriveNest "Find Your Perfect Car / Drive Your Dreams") -->
+        <div class="lg:col-span-7 space-y-6">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black font-display text-[#0f172a] leading-tight tracking-tight">
+            Find Your Low-Carbon Route<br/>
+            Drive Your <span class="text-brand-blue">Dreams</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-600 font-normal leading-relaxed max-w-xl">
+            Explore verified commercial freight carriers, AI-optimized low-emission corridors, and real-time Scope 1 abatement. Best fuel prices. Guaranteed carbon reductions. Drive with confidence.
+          </p>
+
+          <!-- Dual Hero Buttons -->
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="optimizer.html" class="px-7 py-3.5 rounded-full bg-brand-blue hover:bg-brand-blue-hover text-white text-sm font-bold shadow-lg shadow-blue-700/25 transition-all hover:scale-105">
+              Browse Eco Routes
+            </a>
+            <a href="login.html" class="px-7 py-3.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 text-sm font-bold border border-slate-300 shadow-sm transition-all">
+              Enterprise Fleet Portal
+            </a>
+          </div>
+
+          <!-- Trust Badges Underneath -->
+          <div class="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 text-brand-blue flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-extrabold text-slate-900">10,000+</div>
+                <div class="text-xs text-slate-500">Commercial Fleets</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-extrabold text-slate-900">Trusted Carriers</div>
+                <div class="text-xs text-slate-500">Verified & Audited</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-extrabold text-slate-900">Best ROI Prices</div>
+                <div class="text-xs text-slate-500">-24% Fuel Cost</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero Visual (DriveNest 3-Vehicle Showcase + CarbonShift Electric Theme) -->
+        <div class="lg:col-span-5 relative flex items-center justify-center">
+          <div class="relative w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white group">
+            <img src="assets/carbonshift_splash.jpg" alt="CarbonShift Vehicles" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex flex-col justify-end p-6 text-white">
+              <span class="px-3 py-1 rounded-full bg-emerald-500 text-white font-bold text-xs self-start mb-2">Zero-Tailpipe Fleet</span>
+              <h3 class="text-xl font-bold font-display">Intelligent Commercial Electrification</h3>
+              <p class="text-xs text-slate-200 mt-1">Driving low-carbon highways with live GLEC route optimization.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 4. SIGNATURE DRIVENEST FLOATING SEARCH & OPTIMIZER BAR    -->
+  <!-- ======================================================== -->
+  <section class="relative -mt-10 z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 space-y-6">
+      
+      <!-- Top Search Tabs (DriveNest Search Tabs) -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-100">
+        <button class="search-tab-btn active" data-tab-action="search-route">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+          <span>Eco Route Calculator</span>
+        </button>
+        <button class="search-tab-btn" data-tab-action="filter-vehicle">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          <span>Vehicle Powertrain</span>
+        </button>
+        <button class="search-tab-btn" data-tab-action="filter-budget">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Fuel & Carbon Budget</span>
+        </button>
+        <button class="search-tab-btn" data-tab-action="filter-telemetry">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
+          <span>Advanced Telemetry</span>
+        </button>
+      </div>
+
+      <!-- Quick Selector Row with Interactive Mapbox Geocoding Search Boxes (India) -->
+      <form id="hero-quick-route-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
+        
+        <!-- Interactive Origin Search Box for India -->
+        <div class="lg:col-span-3 relative">
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5 text-emerald-800">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Origin (Pickup in India)
+            </span>
+            <span id="hero-origin-coord-badge" class="text-[10px] font-mono text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded">19.08°N, 72.88°E</span>
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-emerald-600 text-sm">
+              📍
+            </span>
+            <input 
+              type="text" 
+              id="hero-origin-input" 
+              autocomplete="off"
+              value="Mumbai, Maharashtra"
+              placeholder="Enter pickup city/hub in India (e.g. Mumbai, Delhi, Bengaluru)..." 
+              class="w-full pl-9 pr-3 py-2.5 bg-slate-50 hover:bg-slate-100 focus:bg-white text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none transition-all"
+            />
+          </div>
+          <!-- Mapbox Autocomplete Suggestions Dropdown -->
+          <div id="hero-origin-suggestions" class="autocomplete-dropdown absolute top-full left-0 right-0 mt-1.5 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 max-h-60 overflow-y-auto hidden"></div>
+        </div>
+
+        <!-- Interactive Destination Search Box for India -->
+        <div class="lg:col-span-3 relative">
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5 text-rose-800">
+              <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+              Destination (Delivery in India)
+            </span>
+            <span id="hero-dest-coord-badge" class="text-[10px] font-mono text-rose-700 font-bold bg-rose-50 px-1.5 py-0.5 rounded">18.52°N, 73.86°E</span>
+          </label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-rose-600 text-sm">
+              🏁
+            </span>
+            <input 
+              type="text" 
+              id="hero-dest-input" 
+              autocomplete="off"
+              value="Pune, Maharashtra"
+              placeholder="Enter delivery hub in India (e.g. Chennai, Pune, Kolkata)..." 
+              class="w-full pl-9 pr-3 py-2.5 bg-slate-50 hover:bg-slate-100 focus:bg-white text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none transition-all"
+            />
+          </div>
+          <!-- Mapbox Autocomplete Suggestions Dropdown -->
+          <div id="hero-dest-suggestions" class="autocomplete-dropdown absolute top-full left-0 right-0 mt-1.5 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 max-h-60 overflow-y-auto hidden"></div>
+        </div>
+
+        <!-- Vehicle Type Dropdown -->
+        <div class="lg:col-span-3">
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">Vehicle Specification</label>
+          <select id="hero-vehicle-select" class="w-full px-3.5 py-2.5 bg-slate-50 text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none">
+            <option value="Heavy-Duty Diesel Truck">Heavy-Duty Commercial Truck (Tata Prima / BharatBenz)</option>
+            <option value="Electric Heavy Semi">Electric Heavy Semi (Zero-Tailpipe EV)</option>
+            <option value="Medium-Duty Delivery Van">Medium-Duty Delivery Van (Mahindra Furio / Eicher)</option>
+            <option value="Hybrid Freight Carrier">Hybrid Freight Carrier</option>
+            <option value="Light Electric Cargo Van">Light Electric Cargo Van (Tata Ace EV)</option>
+            <option value="CNG Heavy Freight">CNG Heavy Commercial Carrier</option>
+          </select>
+        </div>
+
+        <!-- Elevation / Idle -->
+        <div class="lg:col-span-1">
+          <label class="block text-[11px] font-bold text-slate-700 mb-1.5">Elevation (m)</label>
+          <input type="number" id="hero-elevation-input" value="560" class="w-full px-2.5 py-2.5 bg-slate-50 text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none" />
+        </div>
+
+        <!-- Primary Calculate Eco-Route Button -->
+        <div class="lg:col-span-2">
+          <button type="submit" id="hero-calc-btn" class="w-full py-2.5 px-4 rounded-xl bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-bold shadow-md shadow-blue-700/20 transition-all flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span>Calculate Eco-Route</span>
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 5. INTERACTIVE GOOGLE MAPS ROUTE OPTIMIZER & API ENGINE   -->
+  <!-- ======================================================== -->
+  <section id="route-optimizer-section" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold mb-2 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          Live FastAPI Engine: /calculate-route
+        </div>
+        <h2 class="text-3xl font-extrabold font-display text-slate-900">
+          Google Maps Eco-Corridor Navigator
+        </h2>
+        <p class="text-sm text-slate-500 mt-1">
+          High-definition Google Maps route geometry with real-time carbon abatement and full API copying tools.
+        </p>
+      </div>
+
+      <!-- ALL API & PINS COPYING SUITE (Fulfills "copy all the pis and all") -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="window.CarbonShiftAPI.copyApiResponseToClipboard()" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm flex items-center gap-1.5 transition-all">
+          <span>📋 Copy API Response</span>
+        </button>
+        <button onclick="window.CarbonShiftAPI.copyApiPayloadToClipboard()" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm flex items-center gap-1.5 transition-all">
+          <span>📋 Copy Request JSON</span>
+        </button>
+        <button onclick="window.CarbonShiftAPI.copyRouteCoordinatesToClipboard()" class="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-200 shadow-sm flex items-center gap-1.5 transition-all">
+          <span>📍 Copy Route Pins</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Workspace Split: Left Telemetry Card + Right Google Map -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left Telemetry & Input Panel (4 cols) -->
+      <div class="lg:col-span-4 space-y-5">
+        
+        <!-- Live Telemetry Card -->
+        <div id="eco-stats-card" class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Telemetry Summary</span>
+            <span id="stat-savings-pct" class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs">
+              21.9% Savings
+            </span>
+          </div>
+
+          <!-- Distance -->
+          <div class="flex items-center justify-between">
+            <div class="text-xs font-medium text-slate-500">Route Distance</div>
+            <div class="text-right font-mono">
+              <span id="stat-distance" class="text-base font-bold text-slate-900">392.4 km</span>
+              <span id="stat-distance-mi" class="text-xs text-slate-400 block">(243.8 mi)</span>
+            </div>
+          </div>
+
+          <!-- CO2 -->
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs font-medium text-slate-500">CO₂ Emissions</div>
+              <div id="stat-co2-saved" class="text-[11px] font-bold text-emerald-600">-319.1 kg cut</div>
+            </div>
+            <div class="text-right font-mono">
+              <span id="stat-eco-co2" class="text-base font-extrabold text-emerald-700">1139.7 kg</span>
+              <span id="stat-std-co2" class="text-xs text-slate-400 line-through block">1458.8 kg standard</span>
+            </div>
+          </div>
+
+          <!-- Fuel Cost -->
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs font-medium text-slate-500">Fuel Spend</div>
+              <div id="stat-fuel-saved" class="text-[11px] font-bold text-brand-blue">Save $134.20</div>
+            </div>
+            <div class="text-right font-mono">
+              <span id="stat-fuel-cost" class="text-base font-extrabold text-slate-900">$478.70</span>
+              <span id="stat-std-fuel" class="text-xs text-slate-400 line-through block">$612.90 baseline</span>
+            </div>
+          </div>
+
+          <!-- Trees -->
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-600 font-semibold">🌲 Tree Equivalent:</span>
+            <span id="stat-trees" class="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">
+              14.4 trees/mo
+            </span>
+          </div>
+        </div>
+
+        <!-- Input Parameters Card with Mapbox India Geocoding Autocomplete -->
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Terminal Waypoints (India)</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold font-mono">Mapbox Geocoded</span>
+          </div>
+          
+          <!-- Origin Point (A) -->
+          <div class="relative">
+            <label class="block text-xs font-semibold text-slate-600 mb-1 flex items-center justify-between">
+              <span class="flex items-center gap-1.5 text-emerald-800 font-bold">
+                <span>📍</span> Origin Pickup Hub (A)
+              </span>
+              <span id="opt-origin-coord-badge" class="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">[19.08, 72.88]</span>
+            </label>
+            <input 
+              type="text" 
+              id="origin-input" 
+              autocomplete="off"
+              value="Mumbai, Maharashtra" 
+              placeholder="Enter pickup city/hub in India (e.g. Mumbai, Delhi, Bengaluru)..."
+              class="w-full px-3 py-2 bg-slate-50 hover:bg-slate-100 focus:bg-white text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none transition-all" 
+            />
+            <div id="origin-suggestions" class="autocomplete-dropdown absolute top-full left-0 right-0 mt-1 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 max-h-56 overflow-y-auto hidden"></div>
+          </div>
+
+          <!-- Destination Hub (B) -->
+          <div class="relative">
+            <label class="block text-xs font-semibold text-slate-600 mb-1 flex items-center justify-between">
+              <span class="flex items-center gap-1.5 text-rose-800 font-bold">
+                <span>🏁</span> Destination Delivery Hub (B)
+              </span>
+              <span id="opt-dest-coord-badge" class="text-[10px] font-mono text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded">[18.52, 73.86]</span>
+            </label>
+            <input 
+              type="text" 
+              id="dest-input" 
+              autocomplete="off"
+              value="Pune, Maharashtra" 
+              placeholder="Enter delivery hub in India (e.g. Chennai, Pune, Kolkata)..." 
+              class="w-full px-3 py-2 bg-slate-50 hover:bg-slate-100 focus:bg-white text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none transition-all" 
+            />
+            <div id="dest-suggestions" class="autocomplete-dropdown absolute top-full left-0 right-0 mt-1 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 max-h-56 overflow-y-auto hidden"></div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Elevation (m)</label>
+              <input type="number" id="elevation-input" value="560" class="w-full px-3 py-2 bg-slate-50 text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Traffic Idle (min)</label>
+              <input type="number" id="traffic-idle-input" value="35" class="w-full px-3 py-2 bg-slate-50 text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none" />
+            </div>
+          </div>
+
+          <button id="calc-eco-route-btn" class="w-full py-3 bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+            <svg id="calc-btn-spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <span id="calc-btn-text">Calculate Eco-Route</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Right Google Maps Canvas (8 cols) -->
+      <div class="lg:col-span-8 bg-white rounded-3xl p-3 shadow-md border border-slate-200 relative overflow-hidden">
+        
+        <!-- Google Map Container (Screen-visible large size) -->
+        <div id="google-map-container" class="w-full h-[650px] sm:h-[720px] lg:h-[760px] rounded-2xl overflow-hidden z-10"></div>
+
+        <!-- Google Maps Floating Layer Controls (Top Left) -->
+        <div class="absolute top-6 left-6 z-20 flex items-center gap-1.5 p-1 rounded-xl bg-white/95 backdrop-blur-md shadow-md border border-slate-200 text-xs font-semibold">
+          <button data-map-layer="roadmap" class="google-map-btn active">Map</button>
+          <button data-map-layer="satellite" class="google-map-btn">Satellite</button>
+          <button data-map-layer="hybrid" class="google-map-btn">Hybrid</button>
+          <button data-map-layer="terrain" class="google-map-btn">Terrain</button>
+        </div>
+
+        <!-- Google Maps Floating Zoom Controls (Bottom Right) -->
+        <div class="absolute bottom-6 right-6 z-20 flex flex-col gap-1 p-1 rounded-xl bg-white/95 backdrop-blur-md shadow-md border border-slate-200">
+          <button id="google-zoom-in" class="w-8 h-8 rounded-lg bg-white hover:bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-sm shadow-sm">+</button>
+          <button id="google-zoom-out" class="w-8 h-8 rounded-lg bg-white hover:bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-sm shadow-sm">-</button>
+          <button id="google-recenter" class="w-8 h-8 rounded-lg bg-white hover:bg-slate-100 text-brand-blue font-bold flex items-center justify-center text-xs shadow-sm" title="Recenter Route">🎯</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 6. FEATURED LISTINGS / FLEETS (DRIVENEST STYLE)          -->
+  <!-- ======================================================== -->
+  <section id="featured-listings-section" class="py-16 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-display text-slate-900">Featured Eco Fleets & Vehicles</h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">Verified low-carbon commercial tractors and urban freight carriers ready for dispatch.</p>
+        </div>
+        <a href="#route-optimizer-section" class="text-xs font-bold text-brand-blue hover:underline">View All Vehicles →</a>
+      </div>
+
+      <!-- Grid of 5 Vehicles (DriveNest Card Layout) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+        
+        <!-- Card 1 -->
+        <div class="card-drivenest rounded-2xl overflow-hidden flex flex-col justify-between p-4 bg-white relative">
+          <button class="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/90 text-slate-400 hover:text-rose-500 flex items-center justify-center shadow-sm">♥</button>
+          <img src="assets/carbonshift_splash.jpg" alt="Freightliner eCascadia" class="w-full h-32 object-cover rounded-xl mb-3" />
+          <div>
+            <div class="text-[11px] font-bold text-emerald-700 uppercase">Zero-Tailpipe Semi</div>
+            <h3 class="text-sm font-bold text-slate-900 leading-snug">Freightliner eCascadia</h3>
+            <div class="text-base font-extrabold text-brand-blue mt-1">Save $2,840/mo</div>
+            <div class="text-[11px] text-slate-400 mt-2 space-y-0.5">
+              <div>⚡ 438 kWh Battery • 230 mi Range</div>
+              <div>📍 Port of Los Angeles, CA</div>
+            </div>
+          </div>
+          <button class="mt-4 w-full py-2 bg-slate-100 hover:bg-brand-blue hover:text-white text-slate-700 font-bold text-xs rounded-xl transition-all">
+            Deploy to Route
+          </button>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card-drivenest rounded-2xl overflow-hidden flex flex-col justify-between p-4 bg-white relative">
+          <button class="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/90 text-slate-400 hover:text-rose-500 flex items-center justify-center shadow-sm">♥</button>
+          <img src="assets/carbonshift_splash.jpg" alt="Tesla Commercial Semi" class="w-full h-32 object-cover rounded-xl mb-3" />
+          <div>
+            <div class="text-[11px] font-bold text-emerald-700 uppercase">Long-Haul Electric</div>
+            <h3 class="text-sm font-bold text-slate-900 leading-snug">Tesla Semi Long-Haul</h3>
+            <div class="text-base font-extrabold text-brand-blue mt-1">Save $3,650/mo</div>
+            <div class="text-[11px] text-slate-400 mt-2 space-y-0.5">
+              <div>⚡ 500 mi Range • 1.7 kWh/mi</div>
+              <div>📍 Las Vegas Hub, NV</div>
+            </div>
+          </div>
+          <button class="mt-4 w-full py-2 bg-slate-100 hover:bg-brand-blue hover:text-white text-slate-700 font-bold text-xs rounded-xl transition-all">
+            Deploy to Route
+          </button>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card-drivenest rounded-2xl overflow-hidden flex flex-col justify-between p-4 bg-white relative">
+          <button class="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/90 text-slate-400 hover:text-rose-500 flex items-center justify-center shadow-sm">♥</button>
+          <img src="assets/carbonshift_splash.jpg" alt="Volvo VNR Electric" class="w-full h-32 object-cover rounded-xl mb-3" />
+          <div>
+            <div class="text-[11px] font-bold text-teal-700 uppercase">Regional Drayage</div>
+            <h3 class="text-sm font-bold text-slate-900 leading-snug">Volvo VNR Electric</h3>
+            <div class="text-base font-extrabold text-brand-blue mt-1">Save $2,120/mo</div>
+            <div class="text-[11px] text-slate-400 mt-2 space-y-0.5">
+              <div>⚡ 565 kWh • 275 mi Range</div>
+              <div>📍 Chicago Gateway, IL</div>
+            </div>
+          </div>
+          <button class="mt-4 w-full py-2 bg-slate-100 hover:bg-brand-blue hover:text-white text-slate-700 font-bold text-xs rounded-xl transition-all">
+            Deploy to Route
+          </button>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card-drivenest rounded-2xl overflow-hidden flex flex-col justify-between p-4 bg-white relative">
+          <button class="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/90 text-slate-400 hover:text-rose-500 flex items-center justify-center shadow-sm">♥</button>
+          <img src="assets/carbonshift_splash.jpg" alt="Kenworth T680 Hybrid" class="w-full h-32 object-cover rounded-xl mb-3" />
+          <div>
+            <div class="text-[11px] font-bold text-amber-700 uppercase">Aero Hybrid Freight</div>
+            <h3 class="text-sm font-bold text-slate-900 leading-snug">Kenworth T680 Hybrid</h3>
+            <div class="text-base font-extrabold text-brand-blue mt-1">Save $1,890/mo</div>
+            <div class="text-[11px] text-slate-400 mt-2 space-y-0.5">
+              <div>⚡ 12.4 mpg Aero • 455 mi</div>
+              <div>📍 Detroit Freight, MI</div>
+            </div>
+          </div>
+          <button class="mt-4 w-full py-2 bg-slate-100 hover:bg-brand-blue hover:text-white text-slate-700 font-bold text-xs rounded-xl transition-all">
+            Deploy to Route
+          </button>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card-drivenest rounded-2xl overflow-hidden flex flex-col justify-between p-4 bg-white relative">
+          <button class="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/90 text-slate-400 hover:text-rose-500 flex items-center justify-center shadow-sm">♥</button>
+          <img src="assets/carbonshift_splash.jpg" alt="Ford E-Transit" class="w-full h-32 object-cover rounded-xl mb-3" />
+          <div>
+            <div class="text-[11px] font-bold text-emerald-700 uppercase">Urban Last-Mile</div>
+            <h3 class="text-sm font-bold text-slate-900 leading-snug">Ford E-Transit Van</h3>
+            <div class="text-base font-extrabold text-brand-blue mt-1">Save $940/mo</div>
+            <div class="text-[11px] text-slate-400 mt-2 space-y-0.5">
+              <div>⚡ 68 kWh • 126 mi Urban</div>
+              <div>📍 Seattle Depot, WA</div>
+            </div>
+          </div>
+          <button class="mt-4 w-full py-2 bg-slate-100 hover:bg-brand-blue hover:text-white text-slate-700 font-bold text-xs rounded-xl transition-all">
+            Deploy to Route
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 7. BROWSE BY BRAND & BROWSE BY CATEGORY (DRIVENEST STYLE)-->
+  <!-- ======================================================== -->
+  <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Left: Browse by Carrier Brand (7 cols) -->
+      <div class="lg:col-span-7 space-y-4">
+        <h2 class="text-xl font-extrabold font-display text-slate-900">Browse by Manufacturer / OEM</h2>
+        <div class="grid grid-cols-4 sm:grid-cols-4 gap-3">
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 text-center hover:shadow-md transition-all cursor-pointer">
+            <div class="font-bold text-xs text-slate-800">Freightliner</div>
+            <div class="text-[10px] text-slate-400 mt-1">eCascadia Series</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 text-center hover:shadow-md transition-all cursor-pointer">
+            <div class="font-bold text-xs text-slate-800">Volvo Trucks</div>
+            <div class="text-[10px] text-slate-400 mt-1">VNR Electric</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 text-center hover:shadow-md transition-all cursor-pointer">
+            <div class="font-bold text-xs text-slate-800">Tesla Semi</div>
+            <div class="text-[10px] text-slate-400 mt-1">Megawatt Class</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 text-center hover:shadow-md transition-all cursor-pointer">
+            <div class="font-bold text-xs text-slate-800">Kenworth</div>
+            <div class="text-[10px] text-slate-400 mt-1">T680E EV/Hybrid</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 text-center hover:shadow-md transition-all cursor-pointer">
+            <div class="font-bold text-xs text-slate-800">Peterbilt</div>
+            <div class="text-[10px] text-slate-400 mt-1">Model 579EV</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 text-center hover:shadow-md transition-all cursor-pointer">
+            <div class="font-bold text-xs text-slate-800">Ford Pro</div>
+            <div class="text-[10px] text-slate-400 mt-1">E-Transit Cargo</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 text-center hover:shadow-md transition-all cursor-pointer">
+            <div class="font-bold text-xs text-slate-800">Rivian Fleet</div>
+            <div class="text-[10px] text-slate-400 mt-1">Commercial Delivery</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-slate-200 text-center hover:shadow-md transition-all cursor-pointer">
+            <div class="font-bold text-xs text-slate-800">Mercedes eActros</div>
+            <div class="text-[10px] text-slate-400 mt-1">European Long-Haul</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Browse by Category (DriveNest Solid Blue Box) (5 cols) -->
+      <div class="lg:col-span-5 category-blue-card p-6 sm:p-8 flex flex-col justify-between">
+        <div>
+          <h2 class="text-xl font-extrabold font-display mb-1">Browse by Fleet Category</h2>
+          <p class="text-xs text-blue-100 opacity-90 mb-6">Select a commercial transport classification to review specialized eco-corridors.</p>
+          
+          <div class="grid grid-cols-3 gap-3 text-center text-xs font-bold">
+            <div class="p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
+              <div class="text-xl mb-1">🚛</div>
+              <span>Heavy Semi</span>
+            </div>
+            <div class="p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
+              <div class="text-xl mb-1">🚐</div>
+              <span>Delivery Van</span>
+            </div>
+            <div class="p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
+              <div class="text-xl mb-1">❄️</div>
+              <span>Cold-Chain</span>
+            </div>
+            <div class="p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
+              <div class="text-xl mb-1">🚢</div>
+              <span>Intermodal</span>
+            </div>
+            <div class="p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
+              <div class="text-xl mb-1">🏗️</div>
+              <span>Flatbed</span>
+            </div>
+            <div class="p-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors cursor-pointer">
+              <div class="text-xl mb-1">⚡</div>
+              <span>Urban EV</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="mt-6 w-full py-2.5 bg-white text-brand-blue font-bold text-xs rounded-xl hover:bg-blue-50 transition-colors">
+          View All Categories →
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 8. WHY CHOOSE CARBONSHIFT (DRIVENEST "WHY BUY WITH US")   -->
+  <!-- ======================================================== -->
+  <section id="why-choose-section" class="py-16 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-3xl font-extrabold font-display text-slate-900">Why Decarbonize With CarbonShift?</h2>
+        <p class="text-sm text-slate-500 mt-2">Certified routing algorithms, guaranteed fuel savings, and end-to-end ESG compliance assurance.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        
+        <div class="p-5 rounded-2xl bg-slate-50 text-center space-y-3 border border-slate-100">
+          <div class="w-12 h-12 rounded-2xl bg-blue-100 text-brand-blue mx-auto flex items-center justify-center">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">Verified Listings</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">All corridors verified via GLEC v3 and EPA SmartWay models.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-50 text-center space-y-3 border border-slate-100">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">Best ROI Savings</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Guaranteed minimum 20% fuel cost reduction across core dispatches.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-50 text-center space-y-3 border border-slate-100">
+          <div class="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 mx-auto flex items-center justify-center">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">Secure API Telematics</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Cryptographic TLS 256-bit encryption for confidential corporate route data.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-50 text-center space-y-3 border border-slate-100">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 mx-auto flex items-center justify-center">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"/></svg>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">Carbon Credit Credits</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Monetize abated Scope 1 fuel emissions into audited carbon credits.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-50 text-center space-y-3 border border-slate-100">
+          <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-600 mx-auto flex items-center justify-center">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900">24/7 Fleet Dispatch</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">Dedicated logistics optimization engineers supporting active trucks.</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 9. CUSTOMER TESTIMONIALS (DRIVENEST STYLE)               -->
+  <!-- ======================================================== -->
+  <section class="py-16 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-2xl sm:text-3xl font-extrabold font-display text-slate-900">What Commercial Carriers Say</h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-2">Trusted by Fortune 500 motor carriers and intermodal freight operators worldwide.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Review 1 -->
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+          <div class="text-amber-400 text-sm">★★★★★</div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            "CarbonShift optimized our Southwest heavy freight corridor within 48 hours. Our diesel burn dropped by 21.9% while our drivers kept exact delivery timetables."
+          </p>
+          <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
+            <div class="w-9 h-9 rounded-full bg-emerald-800 text-white font-bold text-xs flex items-center justify-center">MV</div>
+            <div>
+              <div class="text-xs font-bold text-slate-900">Marcus Vance</div>
+              <div class="text-[10px] text-slate-400">Penske Commercial Logistics • Ontario, CA</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+          <div class="text-amber-400 text-sm">★★★★★</div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            "Automated CSV export of trip audit logs saved our sustainability compliance team over 40 hours during our recent EU CSRD ESRS E1 reporting audit."
+          </p>
+          <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
+            <div class="w-9 h-9 rounded-full bg-teal-800 text-white font-bold text-xs flex items-center justify-center">ER</div>
+            <div>
+              <div class="text-xs font-bold text-slate-900">Elena Rostova</div>
+              <div class="text-[10px] text-slate-400">Maersk Intermodal Supply Chain • Rotterdam</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+          <div class="text-amber-400 text-sm">★★★★★</div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            "The live FastAPI integration and Google Maps visualization made route adoption painless for our 400 delivery van drivers in Chicago."
+          </p>
+          <div class="flex items-center gap-3 pt-3 border-t border-slate-100">
+            <div class="w-9 h-9 rounded-full bg-amber-800 text-white font-bold text-xs flex items-center justify-center">DK</div>
+            <div>
+              <div class="text-xs font-bold text-slate-900">David Kim</div>
+              <div class="text-[10px] text-slate-400">DHL Express Green Freight • Chicago, IL</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 10. PRE-QUALIFICATION / ENTERPRISE CTA BANNER (DRIVENEST) -->
+  <!-- ======================================================== -->
+  <section class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="category-blue-card p-8 sm:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="relative z-10 space-y-2 max-w-xl">
+        <span class="text-xs uppercase font-bold tracking-wider text-blue-200">TELEMATICS INTEGRATION MADE SIMPLE</span>
+        <h2 class="text-2xl sm:text-3xl font-black font-display">Get Behind the Zero-Carbon Wheel Today</h2>
+        <p class="text-xs sm:text-sm text-blue-100 leading-relaxed">
+          Connect your telematics API in under 5 minutes. Pre-qualify for clean commercial transport tax credits and reduce fleet fuel burn instantly.
+        </p>
+        <div class="pt-4">
+          <a href="login.html" class="inline-block px-7 py-3 rounded-full bg-white text-brand-blue font-bold text-xs shadow-lg hover:bg-blue-50 transition-all">
+            Get Carrier Access Key →
+          </a>
+        </div>
+      </div>
+
+      <div class="relative z-10 w-full md:w-auto flex justify-center">
+        <div class="w-48 sm:w-56 rounded-2xl overflow-hidden shadow-2xl border-4 border-white/20">
+          <img src="assets/carbonshift_splash.jpg" alt="CarbonShift EV" class="w-full h-auto object-cover" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 11. FLEET ANALYTICS & ESG REPORTS INTEGRATION SECTIONS   -->
+  <!-- ======================================================== -->
+  <section id="fleet-analytics-section" class="py-16 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-2xl font-bold font-display text-slate-900">Fleet Analytics & Abatement Dashboard</h2>
+          <p class="text-xs text-slate-500">Live operational expense breakdown and multi-period CO₂ abatement trajectories.</p>
+        </div>
+        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+          <button data-time-range="1M" class="px-3 py-1 rounded-lg text-slate-600 hover:bg-white transition-all">1M</button>
+          <button data-time-range="3M" class="px-3 py-1 rounded-lg text-slate-600 hover:bg-white transition-all">3M</button>
+          <button data-time-range="6M" class="px-3 py-1 rounded-lg text-slate-600 hover:bg-white transition-all">6M</button>
+          <button data-time-range="1Y" class="px-3 py-1 rounded-lg bg-brand-blue text-white shadow-sm transition-all">1Y</button>
+          <button data-time-range="All" class="px-3 py-1 rounded-lg text-slate-600 hover:bg-white transition-all">All</button>
+        </div>
+      </div>
+
+      <!-- Charts Row: Line Graph (7 cols) + OpEx Donut (5 cols) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <div class="lg:col-span-7 p-6 rounded-3xl bg-slate-50 border border-slate-200">
+          <h3 class="text-sm font-bold text-slate-800 mb-1">Carbon Abatement & Fuel Savings Trajectory</h3>
+          <p class="text-xs text-slate-500 mb-4">Measured in metric tons CO₂ and $k fuel spend.</p>
+          <div class="relative h-64 w-full">
+            <canvas id="fleet-savings-line-chart"></canvas>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 p-6 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-slate-800 mb-1">Fleet OpEx Expense Allocation</h3>
+            <p class="text-xs text-slate-500 mb-2">Fuel vs. Maintenance vs. Carbon Taxes.</p>
+            <div class="donut-center-container relative h-48 w-full">
+              <canvas id="fleet-opex-pie-chart"></canvas>
+              <div class="donut-center-label">
+                <div class="text-lg font-black text-slate-900">$74,680</div>
+                <div class="text-[10px] text-slate-400 font-bold uppercase">OpEx Total</div>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px] font-semibold text-slate-600 pt-3 border-t border-slate-200 mt-2">
+            <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#153e2e] mr-1"></span> Fuel: 42%</div>
+            <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#22c55e] mr-1"></span> Maint: 28%</div>
+            <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#f59e0b] mr-1"></span> Penalties: 20%</div>
+            <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#86efac] mr-1"></span> Clean EV: 10%</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bar Chart -->
+      <div class="p-6 rounded-3xl bg-slate-50 border border-slate-200">
+        <h3 class="text-sm font-bold text-slate-800 mb-1">Emissions Abatement by Logistics Division</h3>
+        <p class="text-xs text-slate-500 mb-4">Baseline Conventional Routes vs. CarbonShift Eco-Routes</p>
+        <div class="relative h-64 w-full">
+          <canvas id="fleet-co2-bar-chart"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ESG Reports Section -->
+  <section id="esg-reports-section" class="py-16 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold font-display text-slate-900">Corporate ESG Compliance & Trip Logs</h2>
+          <p class="text-xs text-slate-500">Audited carbon accounting aligned with EU CSRD, SEC, and GLEC v3 standards.</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button id="print-esg-summary-btn" class="px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-50">
+            Print Audit PDF
+          </button>
+          <button id="export-trip-logs-btn" class="px-4 py-2 rounded-xl bg-brand-blue text-white text-xs font-bold shadow-md hover:bg-brand-blue-hover flex items-center gap-1.5">
+            <span>Export Logs (CSV)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Logs Table Card -->
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-4 border-b border-slate-100 flex items-center justify-between gap-4">
+          <input type="text" id="trip-search-input" placeholder="Search by trip ID, route, or fleet..." class="px-3.5 py-1.5 bg-slate-50 text-xs rounded-xl border border-slate-200 focus:outline-none w-64" />
+          <div id="trip-logs-count" class="text-xs text-slate-500">Showing 8 of 8 dispatches</div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+                <th class="py-3 px-4">Trip ID</th>
+                <th class="py-3 px-4">Date</th>
+                <th class="py-3 px-4">Vehicle</th>
+                <th class="py-3 px-4">Corridor</th>
+                <th class="py-3 px-4 text-right">Distance</th>
+                <th class="py-3 px-4 text-right">CO₂ (Eco/Base)</th>
+                <th class="py-3 px-4 text-right">Savings</th>
+                <th class="py-3 px-4 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="trip-logs-tbody">
+              <!-- Populated via js/reports.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- 12. DRIVENEST-STYLE COMPREHENSIVE FOOTER                 -->
+  <!-- ======================================================== -->
+  <footer class="bg-[#0f172a] text-slate-400 text-xs pt-16 pb-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      
+      <!-- Top Row: Contact Strip -->
+      <div class="pb-10 border-b border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div>
+          <h3 class="text-base font-bold text-white font-display">Ready to Decarbonize Your Fleet?</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Our commercial optimization engineers are ready to assist.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-6 text-xs text-slate-300">
+          <div class="flex items-center gap-2">
+            <span class="text-brand-blue">📞</span>
+            <span>+1 (888) 523-4567</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-brand-blue">✉️</span>
+            <span>fleet@carbonshift.io</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-brand-blue">📍</span>
+            <span>123 Clean Tech Way, Suite 400, San Francisco, CA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle Multi-Column Sitemap -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+        
+        <div class="col-span-2 space-y-4">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-xl bg-brand-blue flex items-center justify-center text-white font-bold">
+              ⚡
+            </div>
+            <span class="text-lg font-black text-white font-display">CarbonShift</span>
+          </div>
+          <p class="text-xs text-slate-400 max-w-sm leading-relaxed">
+            Your trusted enterprise partner for commercial fleet decarbonization. Quality AI routing, market-leading fuel cost savings, and verified carbon compliance.
+          </p>
+          <div class="flex items-center gap-3 pt-2">
+            <a href="#" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-brand-blue text-white flex items-center justify-center transition-colors">f</a>
+            <a href="#" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-brand-blue text-white flex items-center justify-center transition-colors">t</a>
+            <a href="#" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-brand-blue text-white flex items-center justify-center transition-colors">in</a>
+            <a href="#" class="w-7 h-7 rounded-full bg-slate-800 hover:bg-brand-blue text-white flex items-center justify-center transition-colors">yt</a>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h4 class="font-bold text-white text-xs uppercase tracking-wider">Eco Fleets</h4>
+          <ul class="space-y-2">
+            <li><a href="#featured-listings-section" class="hover:text-white transition-colors">All Commercial Fleets</a></li>
+            <li><a href="#featured-listings-section" class="hover:text-white transition-colors">Class 8 Electric Semis</a></li>
+            <li><a href="#featured-listings-section" class="hover:text-white transition-colors">Urban Delivery Vans</a></li>
+            <li><a href="#featured-listings-section" class="hover:text-white transition-colors">Hybrid Aero Freight</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <h4 class="font-bold text-white text-xs uppercase tracking-wider">Telematics & API</h4>
+          <ul class="space-y-2">
+            <li><a href="#route-optimizer-section" class="hover:text-white transition-colors">Route Optimizer API</a></li>
+            <li><a href="login.html" class="hover:text-white transition-colors">USDOT Carrier Portal</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">GLEC v3 Framework</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">FastAPI Documentation</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-3">
+          <h4 class="font-bold text-white text-xs uppercase tracking-wider">Enterprise & ESG</h4>
+          <ul class="space-y-2">
+            <li><a href="#esg-reports-section" class="hover:text-white transition-colors">Scope 1 & 3 Audits</a></li>
+            <li><a href="#esg-reports-section" class="hover:text-white transition-colors">EU CSRD Readiness</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom Copyright -->
+      <div class="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500">
+        <div>© 2026 CarbonShift Inc. All rights reserved. Certified EPA SmartWay & GLEC Partner.</div>
+        <div class="mt-2 sm:mt-0 flex gap-4">
+          <a href="#" class="hover:text-slate-300">Security</a>
+          <a href="#" class="hover:text-slate-300">Compliance</a>
+          <a href="#" class="hover:text-slate-300">System Status: Operational</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
+
+  <!-- SCRIPTS -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/geocoder.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

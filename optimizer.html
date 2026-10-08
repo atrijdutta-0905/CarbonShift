@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Route Optimizer — CarbonShift Eco-Corridor Navigator</title>
+  <meta name="description" content="Interactive AI-powered commercial fleet route optimizer with full-screen Google Maps geometry, Mapbox Geocoding, and Scope 1 carbon abatement." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: '#1d4ed8',
+              'blue-hover': '#1e40af',
+              'blue-light': '#eff6ff',
+              green: '#16a34a',
+              'green-dark': '#14532d',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Outfit"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS for Google Maps Integration -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Mapbox GL Geocoder & Search JS CDN -->
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+  <script src="https://api.mapbox.com/search-js/v1.6.0/web.js" defer></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- ======================================================== -->
+  <!-- 1. TOP NAVIGATION BAR (TABS LINK TO DIFFERENT PAGES)     -->
+  <!-- ======================================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-blue to-emerald-500 flex items-center justify-center shadow-md shadow-blue-900/15">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <div class="text-2xl font-black font-display tracking-tight text-[#0f172a] flex items-center">
+            Carbon<span class="text-brand-blue">Shift</span>
+          </div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 -mt-1 font-mono">Eco Fleet Platform</span>
+        </div>
+      </a>
+
+      <!-- Center Navigation Links (Tabs open to different pages) -->
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-brand-blue transition-colors">Home</a>
+        <a href="optimizer.html" class="text-brand-blue transition-colors flex items-center gap-1.5 font-bold">
+          <span>Route Optimizer</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+        </a>
+        <a href="dashboard.html" class="hover:text-brand-blue transition-colors">Fleet Analytics</a>
+        <a href="reports.html" class="hover:text-brand-blue transition-colors">ESG Reports</a>
+        <a href="index.html#featured-listings-section" class="hover:text-brand-blue transition-colors">Eco Fleets</a>
+        <a href="index.html#why-choose-section" class="hover:text-brand-blue transition-colors">Why CarbonShift</a>
+      </nav>
+
+      <!-- Right Action Items -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <a href="dashboard.html" class="p-2 rounded-xl text-slate-400 hover:text-brand-blue hover:bg-blue-50 transition-colors" title="View Analytics">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </a>
+
+        <div id="header-auth-container" class="flex items-center"></div>
+
+        <a href="login.html" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-md">
+          <span>Carrier Portal</span>
+          <span class="text-xs">→</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- 2. ROUTE OPTIMIZER WORKSPACE (EXPANSIVE FULL-SCREEN MAP) -->
+  <!-- ======================================================== -->
+  <main class="flex-1 py-8 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-6">
+    
+    <!-- Top Bar: Status, Headline & API Copy Tools -->
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold mb-2 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          Python Physics Backend: /calculate-route (CarbonShift.ipynb)
+        </div>
+        <h1 class="text-3xl font-black font-display text-slate-900 tracking-tight">
+          Commercial Eco-Corridor Navigator
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+          Real road-snapped Mapbox routing with gradient potential energy & urban traffic idle optimization.
+        </p>
+      </div>
+
+      <!-- API & Pin Copy Suite -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="window.CarbonShiftAPI.copyApiResponseToClipboard()" class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm flex items-center gap-1.5 transition-all">
+          <span>📋 Copy API Response</span>
+        </button>
+        <button onclick="window.CarbonShiftAPI.copyApiPayloadToClipboard()" class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-sm flex items-center gap-1.5 transition-all">
+          <span>📋 Copy Request JSON</span>
+        </button>
+        <button onclick="window.CarbonShiftAPI.copyRouteCoordinatesToClipboard()" class="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-200 shadow-sm flex items-center gap-1.5 transition-all">
+          <span>📍 Copy Route Pins</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Workspace Split: Left Telemetry & Controls (4 cols) + Right Expansive Full-Screen Map (8 cols) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left Panel: Search Inputs, Vehicle Settings & Telemetry (4 cols) -->
+      <div class="lg:col-span-4 space-y-5">
+        
+        <!-- Live Telemetry Card -->
+        <div id="eco-stats-card" class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Live Telemetry Summary</span>
+            <span id="stat-savings-pct" class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs">
+              21.9% Savings
+            </span>
+          </div>
+
+          <!-- Distance -->
+          <div class="flex items-center justify-between">
+            <div class="text-xs font-medium text-slate-500">Route Distance</div>
+            <div class="text-right font-mono">
+              <span id="stat-distance" class="text-base font-bold text-slate-900">392.4 km</span>
+              <span id="stat-distance-mi" class="text-xs text-slate-400 block">(243.8 mi)</span>
+            </div>
+          </div>
+
+          <!-- CO2 -->
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs font-medium text-slate-500">CO₂ Emissions</div>
+              <div id="stat-co2-saved" class="text-[11px] font-bold text-emerald-600">-319.1 kg cut</div>
+            </div>
+            <div class="text-right font-mono">
+              <span id="stat-eco-co2" class="text-base font-extrabold text-emerald-700">1139.7 kg</span>
+              <span id="stat-std-co2" class="text-xs text-slate-400 line-through block">1458.8 kg standard</span>
+            </div>
+          </div>
+
+          <!-- Fuel Cost -->
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs font-medium text-slate-500">Fuel Spend</div>
+              <div id="stat-fuel-saved" class="text-[11px] font-bold text-brand-blue">Save $134.20</div>
+            </div>
+            <div class="text-right font-mono">
+              <span id="stat-fuel-cost" class="text-base font-extrabold text-slate-900">$478.70</span>
+              <span id="stat-std-fuel" class="text-xs text-slate-400 line-through block">$612.90 baseline</span>
+            </div>
+          </div>
+
+          <!-- Trees -->
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-600 font-semibold">🌲 Tree Equivalent:</span>
+            <span id="stat-trees" class="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">
+              14.4 trees/mo
+            </span>
+          </div>
+        </div>
+
+        <!-- Terminal Waypoints & Mapbox Geocoding Autocomplete Search Boxes -->
+        <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Terminal Waypoints (India)</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold font-mono">Mapbox Geocoded</span>
+          </div>
+          
+          <!-- Origin Point (A) -->
+          <div class="relative">
+            <label class="block text-xs font-semibold text-slate-600 mb-1 flex items-center justify-between">
+              <span class="flex items-center gap-1.5 text-emerald-800 font-bold">
+                <span>📍</span> Origin Pickup Hub (A)
+              </span>
+              <span id="opt-origin-coord-badge" class="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">[19.08, 72.88]</span>
+            </label>
+            <input 
+              type="text" 
+              id="origin-input" 
+              autocomplete="off"
+              value="Mumbai, Maharashtra" 
+              placeholder="Enter pickup city/hub in India (e.g. Mumbai, Delhi, Bengaluru)..."
+              class="w-full px-3 py-2.5 bg-slate-50 hover:bg-slate-100 focus:bg-white text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none transition-all" 
+            />
+            <div id="origin-suggestions" class="autocomplete-dropdown absolute top-full left-0 right-0 mt-1 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 max-h-56 overflow-y-auto hidden"></div>
+          </div>
+
+          <!-- Destination Hub (B) -->
+          <div class="relative">
+            <label class="block text-xs font-semibold text-slate-600 mb-1 flex items-center justify-between">
+              <span class="flex items-center gap-1.5 text-rose-800 font-bold">
+                <span>🏁</span> Destination Delivery Hub (B)
+              </span>
+              <span id="opt-dest-coord-badge" class="text-[10px] font-mono text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded">[18.52, 73.86]</span>
+            </label>
+            <input 
+              type="text" 
+              id="dest-input" 
+              autocomplete="off"
+              value="Pune, Maharashtra" 
+              placeholder="Enter delivery hub in India (e.g. Pune, Chennai, Kolkata)..." 
+              class="w-full px-3 py-2.5 bg-slate-50 hover:bg-slate-100 focus:bg-white text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none transition-all" 
+            />
+            <div id="dest-suggestions" class="autocomplete-dropdown absolute top-full left-0 right-0 mt-1 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 max-h-56 overflow-y-auto hidden"></div>
+          </div>
+
+          <!-- Vehicle Powertrain Selection -->
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1">Commercial Powertrain</label>
+            <select id="hero-vehicle-select" class="w-full px-3 py-2.5 bg-slate-50 text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none">
+              <option value="Heavy-Duty Diesel Truck">Heavy-Duty Commercial Truck (Tata Prima / BharatBenz)</option>
+              <option value="Electric Heavy Semi">Electric Heavy Semi (Zero-Tailpipe EV)</option>
+              <option value="Medium-Duty Delivery Van">Medium-Duty Delivery Van (Mahindra Furio / Eicher)</option>
+              <option value="Hybrid Freight Carrier">Hybrid Freight Carrier</option>
+              <option value="Light Electric Cargo Van">Light Electric Cargo Van (Tata Ace EV)</option>
+              <option value="CNG Heavy Freight">CNG Heavy Commercial Carrier</option>
+            </select>
+          </div>
+
+          <!-- Elevation & Idling Parameters -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Elevation (m)</label>
+              <input type="number" id="elevation-input" value="560" class="w-full px-3 py-2 bg-slate-50 text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Traffic Idle (min)</label>
+              <input type="number" id="traffic-idle-input" value="35" class="w-full px-3 py-2 bg-slate-50 text-xs font-semibold rounded-xl border border-slate-200 focus:border-brand-blue focus:outline-none" />
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <button id="calc-eco-route-btn" class="w-full py-3.5 bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 hover:scale-[1.02]">
+            <svg id="calc-btn-spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <span id="calc-btn-text">Calculate Eco-Route</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Right Panel: EXPANSIVE FULL-SCREEN MAP (8 cols, Increased Size To Take The Screen) -->
+      <div class="lg:col-span-8 bg-white rounded-3xl p-3 shadow-md border border-slate-200 relative overflow-hidden flex flex-col">
+        
+        <!-- Large Screen-Dominating Map Container (Height 760px on desktop) -->
+        <div id="google-map-container" class="w-full h-[620px] sm:h-[700px] lg:h-[760px] rounded-2xl overflow-hidden z-10"></div>
+
+        <!-- Google Maps Floating Layer Controls (Top Left) -->
+        <div class="absolute top-6 left-6 z-20 flex items-center gap-1.5 p-1 rounded-xl bg-white/95 backdrop-blur-md shadow-md border border-slate-200 text-xs font-semibold">
+          <button data-map-layer="roadmap" class="google-map-btn active">Map</button>
+          <button data-map-layer="satellite" class="google-map-btn">Satellite</button>
+          <button data-map-layer="hybrid" class="google-map-btn">Hybrid</button>
+          <button data-map-layer="terrain" class="google-map-btn">Terrain</button>
+        </div>
+
+        <!-- Map Full-Screen & Navigation Tools (Top Right) -->
+        <div class="absolute top-6 right-6 z-20 flex items-center gap-2">
+          <div class="px-3 py-1.5 rounded-xl bg-white/95 backdrop-blur-md shadow-md border border-slate-200 text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>HD Road Geometry</span>
+          </div>
+        </div>
+
+        <!-- Google Maps Floating Zoom Controls (Bottom Right) -->
+        <div class="absolute bottom-6 right-6 z-20 flex flex-col gap-1 p-1 rounded-xl bg-white/95 backdrop-blur-md shadow-md border border-slate-200">
+          <button id="google-zoom-in" class="w-9 h-9 rounded-lg bg-white hover:bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-sm shadow-sm" title="Zoom In">+</button>
+          <button id="google-zoom-out" class="w-9 h-9 rounded-lg bg-white hover:bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-sm shadow-sm" title="Zoom Out">-</button>
+          <button id="google-recenter" class="w-9 h-9 rounded-lg bg-white hover:bg-slate-100 text-brand-blue font-bold flex items-center justify-center text-xs shadow-sm" title="Recenter Route">🎯</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
+
+  <!-- SCRIPTS -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/geocoder.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

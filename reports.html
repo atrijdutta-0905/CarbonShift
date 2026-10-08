@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ESG Reports — CarbonShift Corporate Scope 1 & 3 Audits</title>
+  <meta name="description" content="Corporate ESG compliance and commercial trip logs. Scope 1 and 3 carbon accounting aligned with EU CSRD, SEC, and GLEC v3 standards." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: '#1d4ed8',
+              'blue-hover': '#1e40af',
+              'blue-light': '#eff6ff',
+              green: '#16a34a',
+              'green-dark': '#14532d',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Outfit"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- ======================================================== -->
+  <!-- 1. TOP NAVIGATION BAR (TABS LINK TO DIFFERENT PAGES)     -->
+  <!-- ======================================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-blue to-emerald-500 flex items-center justify-center shadow-md shadow-blue-900/15">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <div class="text-2xl font-black font-display tracking-tight text-[#0f172a] flex items-center">
+            Carbon<span class="text-brand-blue">Shift</span>
+          </div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 -mt-1 font-mono">Eco Fleet Platform</span>
+        </div>
+      </a>
+
+      <!-- Center Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-brand-blue transition-colors">Home</a>
+        <a href="optimizer.html" class="hover:text-brand-blue transition-colors">Route Optimizer</a>
+        <a href="dashboard.html" class="hover:text-brand-blue transition-colors">Fleet Analytics</a>
+        <a href="reports.html" class="text-brand-blue transition-colors flex items-center gap-1.5 font-bold">
+          <span>ESG Reports</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+        </a>
+        <a href="index.html#featured-listings-section" class="hover:text-brand-blue transition-colors">Eco Fleets</a>
+        <a href="index.html#why-choose-section" class="hover:text-brand-blue transition-colors">Why CarbonShift</a>
+      </nav>
+
+      <!-- Right Action Items -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <div id="header-auth-container" class="flex items-center"></div>
+
+        <a href="login.html" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-md">
+          <span>Carrier Portal</span>
+          <span class="text-xs">→</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- 2. ESG COMPLIANCE & TRIP LOGS WORKSPACE                  -->
+  <!-- ======================================================== -->
+  <main class="flex-1 py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-8">
+    
+    <!-- Top Action Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold mb-2 border border-emerald-200">
+          <span>📋</span> Audited Carbon Accounting
+        </div>
+        <h1 class="text-3xl font-extrabold font-display text-slate-900">
+          Corporate ESG Compliance & Trip Logs
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+          Audited Scope 1 & 3 freight decarbonization records aligned with EU CSRD, SEC, and GLEC v3 standards.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button id="print-esg-summary-btn" class="px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 shadow-sm hover:bg-slate-50 flex items-center gap-1.5">
+          <span>🖨️ Print Audit PDF</span>
+        </button>
+        <button id="export-trip-logs-btn" class="px-4 py-2.5 rounded-xl bg-brand-blue text-white text-xs font-bold shadow-md hover:bg-brand-blue-hover flex items-center gap-1.5">
+          <span>📥 Export Logs (CSV)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Compliance Status Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">EU CSRD Audit Status</div>
+        <div class="text-2xl font-black font-display text-emerald-600 flex items-center gap-2">
+          <span>✅ Validated</span>
+        </div>
+        <div class="text-xs text-slate-500 font-medium">Digital Product Passport Ready</div>
+      </div>
+
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">EPA SmartWay Score</div>
+        <div class="text-2xl font-black font-display text-slate-900">4.9 / 5.0</div>
+        <div class="text-xs text-emerald-600 font-medium">Top 5% Commercial Carrier Tier</div>
+      </div>
+
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">GLEC v3 Verification</div>
+        <div class="text-2xl font-black font-display text-brand-blue">100% Audited</div>
+        <div class="text-xs text-slate-500 font-medium">Accredited by Global Logistics Council</div>
+      </div>
+
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Verified Carbon Credits</div>
+        <div class="text-2xl font-black font-display text-emerald-700">38,420 tCO₂e</div>
+        <div class="text-xs text-slate-500 font-medium">Gold Standard Registry Eligible</div>
+      </div>
+    </div>
+
+    <!-- Interactive Dispatches & Trip Logs Table Card -->
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+      
+      <!-- Table Filter Header -->
+      <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <input 
+            type="text" 
+            id="trip-search-input" 
+            placeholder="Search by trip ID, vehicle, or corridor..." 
+            class="px-4 py-2 bg-slate-50 text-xs rounded-xl border border-slate-200 focus:outline-none focus:border-brand-blue w-72" 
+          />
+          <select id="trip-status-filter" class="px-3 py-2 bg-slate-50 text-xs rounded-xl border border-slate-200 focus:outline-none">
+            <option value="all">All Fleets</option>
+            <option value="Compliant">Compliant</option>
+            <option value="Zero-Tailpipe">Zero-Tailpipe</option>
+          </select>
+        </div>
+
+        <div id="trip-logs-count" class="text-xs text-slate-500 font-medium">Showing active commercial dispatches</div>
+      </div>
+
+      <!-- Logs Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-[10px] border-b border-slate-200">
+              <th class="py-3.5 px-6">Dispatch ID</th>
+              <th class="py-3.5 px-6">Timestamp</th>
+              <th class="py-3.5 px-6">Vehicle Specification</th>
+              <th class="py-3.5 px-6">Corridor Route</th>
+              <th class="py-3.5 px-6 text-right">Distance</th>
+              <th class="py-3.5 px-6 text-right">CO₂ (Eco / Standard)</th>
+              <th class="py-3.5 px-6 text-right">Net Savings</th>
+              <th class="py-3.5 px-6 text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody id="trip-logs-tbody" class="divide-y divide-slate-100">
+            <!-- Dynamically populated via js/reports.js -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Official ESG Certificate Preview Card -->
+    <div class="category-blue-card p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="space-y-2">
+        <span class="text-xs uppercase font-bold tracking-wider text-blue-200 font-mono">OFFICIAL GLEC COMPLIANCE CERTIFICATE</span>
+        <h2 class="text-2xl font-bold font-display">Certified Low-Carbon Commercial Fleet 2026</h2>
+        <p class="text-xs sm:text-sm text-blue-100 max-w-2xl leading-relaxed">
+          This certifies that commercial freight operations on CarbonShift corridors achieve audited Scope 1 abatement exceeding 21.9% average fuel savings under verified GLEC v3 emission factors.
+        </p>
+      </div>
+
+      <button onclick="window.print()" class="px-6 py-3 rounded-full bg-white text-brand-blue font-bold text-xs shadow-lg hover:bg-blue-50 transition-all whitespace-nowrap">
+        Download Certificate PDF →
+      </button>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#0f172a] text-slate-400 text-xs py-10 border-t border-slate-800 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>© 2026 CarbonShift Inc. Verified GLEC & EPA SmartWay Partner.</div>
+      <div class="flex items-center gap-6">
+        <a href="index.html" class="hover:text-white">Home</a>
+        <a href="optimizer.html" class="hover:text-white">Route Optimizer</a>
+        <a href="dashboard.html" class="hover:text-white">Fleet Analytics</a>
+        <a href="login.html" class="hover:text-white">Portal</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
+
+  <!-- SCRIPTS -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/geocoder.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

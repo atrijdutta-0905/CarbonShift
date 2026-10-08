@@ -1,0 +1,21 @@
+{
+  "name": "carbonshift",
+  "version": "2.0.0",
+  "description": "Intelligent Fleet Decarbonization Platform & Tri-Route Optimizer",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "backend": "python backend.py"
+  },
+  "keywords": [
+    "carbonshift",
+    "fleet-decarbonization",
+    "eco-routing",
+    "esg",
+    "mapbox",
+    "green-logistics"
+  ],
+  "author": "CarbonShift Team",
+  "license": "MIT"
+}

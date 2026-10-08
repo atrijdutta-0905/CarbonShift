@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fleet Analytics — CarbonShift Telemetry & Carbon Abatement</title>
+  <meta name="description" content="Commercial enterprise fleet analytics dashboard. Scope 1 carbon abatement, fuel expense breakdown, and multi-period trajectories." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: '#1d4ed8',
+              'blue-hover': '#1e40af',
+              'blue-light': '#eff6ff',
+              green: '#16a34a',
+              'green-dark': '#14532d',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Outfit"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#f8fafc] text-[#0f172a] min-h-screen flex flex-col antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- ======================================================== -->
+  <!-- 1. TOP NAVIGATION BAR (TABS LINK TO DIFFERENT PAGES)     -->
+  <!-- ======================================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-blue to-emerald-500 flex items-center justify-center shadow-md shadow-blue-900/15">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <div class="text-2xl font-black font-display tracking-tight text-[#0f172a] flex items-center">
+            Carbon<span class="text-brand-blue">Shift</span>
+          </div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 -mt-1 font-mono">Eco Fleet Platform</span>
+        </div>
+      </a>
+
+      <!-- Center Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="index.html" class="hover:text-brand-blue transition-colors">Home</a>
+        <a href="optimizer.html" class="hover:text-brand-blue transition-colors">Route Optimizer</a>
+        <a href="dashboard.html" class="text-brand-blue transition-colors flex items-center gap-1.5 font-bold">
+          <span>Fleet Analytics</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-blue"></span>
+        </a>
+        <a href="reports.html" class="hover:text-brand-blue transition-colors">ESG Reports</a>
+        <a href="index.html#featured-listings-section" class="hover:text-brand-blue transition-colors">Eco Fleets</a>
+        <a href="index.html#why-choose-section" class="hover:text-brand-blue transition-colors">Why CarbonShift</a>
+      </nav>
+
+      <!-- Right Action Items -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <div id="header-auth-container" class="flex items-center"></div>
+
+        <a href="login.html" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-md">
+          <span>Carrier Portal</span>
+          <span class="text-xs">→</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- 2. FLEET ANALYTICS DASHBOARD CONTENT                     -->
+  <!-- ======================================================== -->
+  <main class="flex-1 py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-8">
+    
+    <!-- Top Header & Time-Range Switcher -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-brand-blue text-xs font-bold mb-2 border border-blue-200">
+          <span>📊</span> Enterprise Performance Telemetry
+        </div>
+        <h1 class="text-3xl font-extrabold font-display text-slate-900">
+          Fleet Analytics & Carbon Abatement
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+          Live operational expense breakdown, GLEC-verified carbon cuts, and multi-period abatement trajectories.
+        </p>
+      </div>
+
+      <!-- Time Range Filters -->
+      <div class="flex items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm text-xs font-semibold self-start sm:self-auto">
+        <button data-time-range="1M" class="px-3.5 py-1.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-all">1M</button>
+        <button data-time-range="3M" class="px-3.5 py-1.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-all">3M</button>
+        <button data-time-range="6M" class="px-3.5 py-1.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-all">6M</button>
+        <button data-time-range="1Y" class="px-3.5 py-1.5 rounded-xl bg-brand-blue text-white shadow-sm transition-all font-bold">1Y</button>
+        <button data-time-range="All" class="px-3.5 py-1.5 rounded-xl text-slate-600 hover:bg-slate-50 transition-all">All</button>
+      </div>
+    </div>
+
+    <!-- 4 KPI Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Scope 1 Abated</div>
+        <div class="text-3xl font-black font-display text-emerald-600">-38.4M kg</div>
+        <div class="text-xs text-slate-500 font-medium">↑ 24.2% vs previous period</div>
+      </div>
+
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Net Fuel Savings</div>
+        <div class="text-3xl font-black font-display text-slate-900">$2.48M</div>
+        <div class="text-xs text-brand-blue font-medium">-18.6% commercial diesel burn</div>
+      </div>
+
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Active EV Fleets</div>
+        <div class="text-3xl font-black font-display text-brand-blue">1,420</div>
+        <div class="text-xs text-slate-500 font-medium">Zero-tailpipe commercial semi/vans</div>
+      </div>
+
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">CSRD / SEC Compliance</div>
+        <div class="text-3xl font-black font-display text-emerald-600">99.4%</div>
+        <div class="text-xs text-emerald-700 font-medium">GLEC Framework v3 Certified</div>
+      </div>
+    </div>
+
+    <!-- Charts Row: Line Graph (7 cols) + OpEx Donut (5 cols) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Carbon Abatement & Fuel Savings Trajectory -->
+      <div class="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-bold text-slate-900 font-display">Carbon Abatement & Fuel Savings Trajectory</h2>
+            <p class="text-xs text-slate-500">Metric tons CO₂ and $k fuel spend saved per month.</p>
+          </div>
+          <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Live Trend</span>
+        </div>
+        <div class="relative h-72 w-full">
+          <canvas id="fleet-savings-line-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- OpEx Allocation Donut Chart -->
+      <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+        <div>
+          <h2 class="text-base font-bold text-slate-900 font-display">Fleet OpEx Expense Allocation</h2>
+          <p class="text-xs text-slate-500 mb-3">Diesel fuel vs Maintenance vs Carbon penalties vs EV charging.</p>
+          <div class="donut-center-container relative h-56 w-full">
+            <canvas id="fleet-opex-pie-chart"></canvas>
+            <div class="donut-center-label">
+              <div class="text-xl font-black text-slate-900">$74,680</div>
+              <div class="text-[10px] text-slate-400 font-bold uppercase">Monthly OpEx</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs font-semibold text-slate-600 pt-4 border-t border-slate-100">
+          <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#153e2e] mr-1.5"></span> Diesel Fuel: 42%</div>
+          <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#22c55e] mr-1.5"></span> Maintenance: 28%</div>
+          <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#f59e0b] mr-1.5"></span> Carbon Fees: 20%</div>
+          <div><span class="inline-block w-2.5 h-2.5 rounded-full bg-[#86efac] mr-1.5"></span> Clean EV: 10%</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bar Chart: Division Comparison -->
+    <div class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-slate-900 font-display">Emissions Abatement by Logistics Division</h2>
+          <p class="text-xs text-slate-500">Baseline Conventional Route CO₂ vs CarbonShift Optimized Eco-Route CO₂</p>
+        </div>
+        <span class="text-xs text-slate-400 font-mono">Normalized GLEC Metric Tons</span>
+      </div>
+      <div class="relative h-72 w-full">
+        <canvas id="fleet-co2-bar-chart"></canvas>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#0f172a] text-slate-400 text-xs py-10 border-t border-slate-800 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>© 2026 CarbonShift Inc. Enterprise Fleet Analytics Engine.</div>
+      <div class="flex items-center gap-6">
+        <a href="index.html" class="hover:text-white">Home</a>
+        <a href="optimizer.html" class="hover:text-white">Route Optimizer</a>
+        <a href="reports.html" class="hover:text-white">ESG Reports</a>
+        <a href="login.html" class="hover:text-white">Portal</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm"></div>
+
+  <!-- SCRIPTS -->
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/geocoder.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
